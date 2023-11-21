@@ -71,3 +71,68 @@ App.vue
 - As Views são as páginas em si. Normalmente uma view está relacionada diretamente a uma ou mais rotas da nossa aplicação.
 
 - Os componentes em si são as partes menores e reaproveitáveis.
+
+# Depois de criar o roteador, fica bem mais tranquilo criar uma nova rota.
+
+roteador/index.ts
+```ts
+import { createRouter, createWebHashHistory } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
+import Tarefas from '../views/Tarefas.vue'
+import Projetos from '../views/Projetos.vue'
+
+const rotas: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'Tarefas',
+    component: Tarefas
+  },
+  { // Nova rota
+    path: '/projetos',
+    name: 'Projetos',
+    component: Projetos
+  }
+]
+
+const roteador = createRouter({
+  history: createWebHashHistory(),
+  routes: rotas
+})
+
+export default roteador
+
+```
+
+- Aí basta criar a vie
+
+# Criando navbar/links
+
+BarraLateral.vue
+```vue
+<template>
+    <header>
+        <h1><img src="../assets/logo.png" alt="Logo alura  tracker"></h1>
+        <button class="button" @click="alterarTema">{{ textoBotao }}</button>
+        <nav class="panel mt-5">
+            <ul>
+                <li>
+                    <router-link to="/" class="link"> <!--Aqui-->
+                        <i class="fas fa-tasks"></i>
+                        tarefas
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/projetos" class="link">
+                        <i class="fas fa-project-diagram"></i>
+                        tarefas
+                    </router-link>
+                </li>
+            </ul>
+        </nav>
+    </header>
+</template>
+```
+
+- O router-link, funciona da mesma forma q o Link do react-router-dom
+- Na lógica q tu criou acima, quando tu clicar em cada icone, vai ser direcionado pra rota correspondente
+
