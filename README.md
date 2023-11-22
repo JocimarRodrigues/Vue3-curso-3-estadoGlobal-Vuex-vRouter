@@ -1,4 +1,4 @@
-# Documentação oficial sobre o router-vio
+# Documentação oficial sobre o router-vue
 - https://router.vuejs.org/guide/
 
 
