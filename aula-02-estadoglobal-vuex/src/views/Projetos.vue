@@ -6,12 +6,7 @@
                 <label for="nomeDoProjeto" class="label">
                     Nome do Projeto
                 </label>
-                <input 
-                type="text" 
-                class="input" 
-                v-model="nomeDoProjeto" 
-                id="nomeDoProjeto"
-                />
+                <input type="text" class="input" v-model="nomeDoProjeto" id="nomeDoProjeto" />
             </div>
             <div class="field">
                 <button class="button" type="submit">
@@ -43,25 +38,27 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import type IProjeto from '../interfaces/IProjeto'
+import { computed, defineComponent } from 'vue';
+import { useStore } from '@/store';
 
 export default defineComponent({
     name: 'ProjetosView',
     data() {
         return {
             nomeDoProjeto: '',
-            projetos: [] as IProjeto[]
         }
     },
     methods: {
         salvar() {
-            const projeto: IProjeto = {
-                nome: this.nomeDoProjeto,
-                id: new Date().toISOString()
-            }
-            this.projetos.push(projeto)
+            this.store.commit('ADICIONA_PROJETO', this.nomeDoProjeto)
             this.nomeDoProjeto = ''
+        },
+    },
+    setup() {
+        const store = useStore();
+        return {
+            store,
+            projetos: computed(() => store.state.projetos)
         }
     }
 })
@@ -71,5 +68,4 @@ export default defineComponent({
 .projetos {
     padding: 1.25rem;
 }
-
 </style>
