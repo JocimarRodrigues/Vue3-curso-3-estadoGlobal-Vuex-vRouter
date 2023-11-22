@@ -151,3 +151,89 @@ BarraLateral.vue
 - O router-link, funciona da mesma forma q o Link do react-router-dom
 - Na lógica q tu criou acima, quando tu clicar em cada icone, vai ser direcionado pra rota correspondente
 
+# Documentação oficial do router--vue
+
+- https://router.vuejs.org/guide/
+
+# Criando página de projetos
+
+Projetos.vue
+```vue
+<template>
+    <section class="projetos">
+        <h1 class="title">Projetos</h1>
+        <form @submit.prevent="salvar"> <!--Aqui-->
+            <div class="field">
+                <label for="nomeDoProjeto" class="label">
+                    Nome do Projeto
+                </label>
+                <input 
+                type="text" 
+                class="input" 
+                v-model="nomeDoProjeto" 
+                id="nomeDoProjeto"
+                /> <!--v-model aqui-->
+            </div>
+            <div class="field">
+                <button class="button" type="submit">
+                    Salvar
+                </button>
+            </div>
+            <table class="table is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            Bine
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="projeto in projetos" :key="projeto.id">
+                        <td>
+                            {{ projeto.id }}
+                        </td>
+                        <td>{{ projeto.nome }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </section>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import type IProjeto from '../interfaces/IProjeto'
+
+export default defineComponent({
+    name: 'ProjetosView',
+    data() {
+        return {
+            nomeDoProjeto: '',
+            projetos: [] as IProjeto[]
+        }
+    },
+    methods: {
+        salvar() {
+            const projeto: IProjeto = {
+                nome: this.nomeDoProjeto,
+                id: new Date().toISOString()
+            }
+            this.projetos.push(projeto)
+            this.nomeDoProjeto = ''
+        }
+    }
+})
+</script>
+
+<style scoped>
+.projetos {
+    padding: 1.25rem;
+}
+
+</style>
+```
+
+- Sobre o código acima oq tu pode acrescentar é a vorma q tu trabalha com o form, usando v-model para atribuir o valor do input na variável e o submit.prevent q é para impedir o comportamento padrao de um submit(Recarregar a página)

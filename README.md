@@ -1,3 +1,7 @@
+# Documentação oficial sobre o router-vio
+- https://router.vuejs.org/guide/
+
+
 # Observações
 
 ### Tu está reutilizando o código do curso 2
