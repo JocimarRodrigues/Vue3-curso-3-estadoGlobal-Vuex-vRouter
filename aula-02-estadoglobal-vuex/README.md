@@ -354,3 +354,11 @@ export function useStore(): Store<Estado> { // Aqui
 - Não esquecer de  renomear o return do useStore para não dar conflito, tu faz isso lá no import usando o as "novoNome"
 
 
+# Actions x Mutations
+
+ Você vai perceber, analisando as documentações do Vuex, que existem actions e mutations. Existe uma linha tênue separando os dois;
+
+- Em vez de mudar o estado, as ações confirmam (ou fazem commit de) mutações.
+- As ações podem conter operações assíncronas arbitrárias.
+
+ Então, uma chamada à uma API HTTP, por exemplo, ficaria numa action e uma mutation seria chamada caso a requisição seja realizada com sucesso.

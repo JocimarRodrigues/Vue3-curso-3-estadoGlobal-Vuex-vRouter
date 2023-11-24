@@ -1,6 +1,9 @@
 # Documentação oficial sobre o router-vue
 - https://router.vuejs.org/guide/
 
+# Provide/Inject com Composition API
+- https://vuejs.org/guide/components/provide-inject.html#working-with-reactivity
+
 
 # Observações
 
