@@ -1,6 +1,12 @@
 <template>
     <section class="projetos">
         <h1 class="title">Projetos</h1>
+        <router-link to="/projetos/novo" class="button">
+            <span class="icon is-small">
+                <i class="fas fa-plus"></i>
+            </span>
+            <span>Novo Projeto</span>
+        </router-link>
             <table class="table is-fullwidth">
                 <thead>
                     <tr>
@@ -8,7 +14,10 @@
                             ID
                         </th>
                         <th>
-                            Bine
+                            Nome
+                        </th>
+                        <th>
+                            Ações
                         </th>
                     </tr>
                 </thead>
@@ -18,6 +27,13 @@
                             {{ projeto.id }}
                         </td>
                         <td>{{ projeto.nome }}</td>
+                        <td>
+                            <router-link :to="`/projetos/${projeto.id}`" class="button">
+                                <span class="icon is-small">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </span>
+                            </router-link>
+                        </td>
                     </tr>
                 </tbody>
             </table>

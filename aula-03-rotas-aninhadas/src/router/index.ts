@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import Tarefas from '../views/Tarefas.vue'
 import Projetos from '../views/Projetos.vue'
+import Formulario from '../views/Projetos/Formulario.vue'
 
 const rotas: RouteRecordRaw[] = [
   {
@@ -11,8 +12,18 @@ const rotas: RouteRecordRaw[] = [
   },
   {
     path: '/projetos',
-    name: 'Projetos',
+    name: 'ProjetosView',
     component: Projetos
+  },
+  {
+    path: '/projetos/novo',
+    name: 'Novo projeto',
+    component: Formulario
+  },
+  {
+    path: '/projetos/:id',
+    name: 'Projetos',
+    component: Formulario
   }
 ]
 

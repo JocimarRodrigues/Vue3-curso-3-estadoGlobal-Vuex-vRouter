@@ -22,7 +22,7 @@ import { defineComponent } from 'vue';
 import { useStore } from '@/store';
 
 export default defineComponent({
-    name: 'FormularioViw',
+    name: 'FormularioView',
     data() {
         return {
             nomeDoProjeto: '',
