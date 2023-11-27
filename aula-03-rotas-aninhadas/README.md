@@ -349,3 +349,137 @@ export default defineComponent({
 </script>
 ```
 
+
+# Rotas Aninhadas
+
+- Tu vai criar essas rotas, dentro do roteador
+
+## COM ROTAS ANINHADAS
+
+router/index.ts
+```ts
+import { createRouter, createWebHashHistory } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
+import Tarefas from '../views/Tarefas.vue'
+import Projetos from '../views/Projetos.vue'
+import Formulario from '../views/Projetos/Formulario.vue'
+import Lista from '../views/Projetos/Lista.vue'
+
+const rotas: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'Tarefas',
+    component: Tarefas
+  },
+  {
+    path: '/projetos',
+    component: Projetos,
+    children: [
+      {
+        path: '',
+        name: 'Projetos',
+        component: Lista
+      },
+      {
+        path: 'novo',
+        name: 'Novo projeto',
+        component: Formulario
+      },
+      {
+        path: ':id',
+        name: 'Editar projeto',
+        component: Formulario,
+        props: true
+      }
+
+    ]
+  },
+
+]
+
+
+const roteador = createRouter({
+  history: createWebHashHistory(),
+  routes: rotas
+})
+
+export default roteador
+
+```
+
+- Para tu aninhar as rotas basta aprir a propriedade children, dizer q vai receber um array e dentro desse array colocar as novas rotas
+- Note que não precisa e nem deve se usar a / para as rotas filhas
+
+
+
+## SEM ROTAS ANINHADAS
+router/index.ts
+```ts
+import { createRouter, createWebHashHistory } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
+import Tarefas from '../views/Tarefas.vue'
+import Projetos from '../views/Projetos.vue'
+import Formulario from '../views/Projetos/Formulario.vue'
+
+const rotas: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'Tarefas',
+    component: Tarefas
+  },
+  {
+    path: '/projetos',
+    name: 'ProjetosView',
+    component: Projetos
+  },
+  {
+    path: '/projetos/novo',
+    name: 'Novo projeto',
+    component: Formulario
+  },
+  {
+    path: '/projetos/:id',
+    name: 'Projetos',
+    component: Formulario,
+    props: true
+  }
+]
+
+const roteador = createRouter({
+  history: createWebHashHistory(),
+  routes: rotas
+})
+
+export default roteador
+
+```
+
+# Feito os passos acima, basta ir no componente que vai receber essas rotas e chamar o roteador lá
+
+- Na lógica do teu projeto tu vai ter um componente Projetos vue, q é quem vai receber a rota principal e as rotas filhas
+
+Projetos.vue
+```vue
+<template>
+    <div class="projetos">
+        <h1 class="title">Projetos</h1>
+        <router-view></router-view> <!--Aqui-->
+    </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+    name: "ProjetosView",
+})
+</script>
+
+<style scoped>
+.projetos {
+    padding: 1.25rem;
+}
+</style>
+```
+
+- Note que nesse componente tu apenas cria um template e chama as rotas filhas dele, como tu definiu lá no roteador q essa vai ser a rota Pai, com o uso do router-view todas as rotas filhas vão ficar disponíveis nesse componente.
