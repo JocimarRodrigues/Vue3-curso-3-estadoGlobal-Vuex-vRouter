@@ -4,6 +4,8 @@
 # Provide/Inject com Composition API
 - https://vuejs.org/guide/components/provide-inject.html#working-with-reactivity
 
+# Boa prática para organizar mutations, doc oficial
+- https://vuex.vuejs.org/guide/mutations.html#using-constants-for-mutation-types
 
 # Observações
 
