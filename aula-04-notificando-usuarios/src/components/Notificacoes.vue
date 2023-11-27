@@ -1,25 +1,23 @@
 <template>
     <div class="notificacoes">
         <article class="message is-success">
-            <div class="message-header">
-                <div class="message-body">
-                    Aqui vai o texto da notificação
-                </div>
+            <div class="message-header"> Atenção! </div>
+            <div class="message-body">
+                Aqui vai o texto da notificação
             </div>
         </article>
         <article class="message is-warning">
-            <div class="message-header">
-                <div class="message-body">
-                    Aqui vai o texto da notificação
-                </div>
+            <div class="message-header"> Atenção! </div>
+            <div class="message-body">
+                Aqui vai o texto da notificação
             </div>
         </article>
         <article class="message is-danger">
-            <div class="message-header">
-                <div class="message-body">
-                    Aqui vai o texto da notificação
-                </div>
+            <div class="message-header"> Atenção! </div>
+            <div class="message-body">
+                Aqui vai o texto da notificação
             </div>
+
         </article>
     </div>
 </template>
