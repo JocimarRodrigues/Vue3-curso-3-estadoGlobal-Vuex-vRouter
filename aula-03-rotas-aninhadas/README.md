@@ -483,3 +483,230 @@ export default defineComponent({
 ```
 
 - Note que nesse componente tu apenas cria um template e chama as rotas filhas dele, como tu definiu lá no roteador q essa vai ser a rota Pai, com o uso do router-view todas as rotas filhas vão ficar disponíveis nesse componente.
+
+# IMPORTANTE => ORGANIZANDO MUTATIONS
+
+- Note que tu está usando strings para o nome das mutations e isso funciona, mas não é uma boa prática porque caso tu digite o nome errado de uma mutation na chamada, isso vai dar um bug e pode ser bem difícil de debugar.
+- Para resolver esse problema, dentro de store, tu vai criar um novo arquivo por ex mutations-tipo e lá dentro tu vai criar as const com os nomes das tuas mutations e definir como valor para elas uma string como o nome da mutation, depois basta exportar essas const.
+- Depois basta tu chamar as const e usar elas no lugar das string, dessa forma fica bem mais difícil tu errar o nome de uma mutation
+
+## Passo 1, criar o tipo-mutations.ts dentro de store
+
+tipo-mutations.ts
+```ts
+export const ADICIONA_PROJETO = "ADICIONA_PROJETO";
+export const ALTERA_PROJETO = "ALTERA_PROJETO";
+export const EXCLUIR_PROJETO = "EXCLUIR_PROJETO";
+
+```
+
+## Passo 2, dentro da store importa e use essas const em vez das string
+
+### COM AS CONST
+store/index.ts
+```ts
+import type IProjeto from '@/interfaces/IProjeto'
+import type { InjectionKey } from 'vue'
+import { createStore, Store, useStore as vuexUseStore } from 'vuex'
+import { ADICIONA_PROJETO, ALTERA_PROJETO, EXCLUIR_PROJETO } from './tipo-mutations' // Aqui
+
+interface Estado {
+  projetos: IProjeto[]
+}
+
+export const key: InjectionKey<Store<Estado>> = Symbol()
+
+export const store = createStore<Estado>({
+  state: {
+    projetos: []
+  },
+  mutations: {
+    [ADICIONA_PROJETO](state, nomeDoProjeto: string) { // Aqui
+      const projeto = {
+        id: new Date().toISOString(),
+        nome: nomeDoProjeto
+      } as IProjeto
+      state.projetos.push(projeto)
+    },
+    [ALTERA_PROJETO](state, projeto: IProjeto) { // Aqui
+      const index = state.projetos.findIndex(proj => proj.id == projeto.id)
+      state.projetos[index] = projeto
+    },
+    [EXCLUIR_PROJETO](state, id: string) { // Aqui
+      state.projetos = state.projetos.filter(proj => proj.id != id)
+    }
+  }
+})
+
+export function useStore(): Store<Estado> {
+  return vuexUseStore(key)
+}
+```
+- Note que tu coloca as const dentro de um []
+- Não esquecer de importar as const
+
+### SEM AS CONST
+store/index.ts
+```ts
+import type IProjeto from '@/interfaces/IProjeto'
+import type { InjectionKey } from 'vue'
+import { createStore, Store, useStore as vuexUseStore } from 'vuex'
+
+interface Estado {
+  projetos: IProjeto[]
+}
+
+export const key: InjectionKey<Store<Estado>> = Symbol()
+
+export const store = createStore<Estado>({
+  state: {
+    projetos: []
+  },
+  mutations: {
+    'ADICIONA_PROJETO'(state, nomeDoProjeto: string) {
+      const projeto = {
+        id: new Date().toISOString(),
+        nome: nomeDoProjeto
+      } as IProjeto
+      state.projetos.push(projeto)
+    },
+    'ALTERA_PROJETO'(state, projeto: IProjeto) {
+      const index = state.projetos.findIndex(proj => proj.id == projeto.id)
+      state.projetos[index] = projeto
+    },
+    'EXCLUIR_PROJETO'(state, id: string) {
+      state.projetos = state.projetos.filter(proj => proj.id != id)
+    }
+  }
+})
+
+export function useStore(): Store<Estado> {
+  return vuexUseStore(key)
+}
+```
+
+## Passo 3, agora basta ir nos componentes que estão utilizando essas mutations e fazer o mesmo procedimento do passo 2
+
+### COM AS CONST
+Formulario.vue
+```vue
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { useStore } from '@/store';
+import { ADICIONA_PROJETO, ALTERA_PROJETO } from '@/store/tipo-mutations'; // Aqui
+
+export default defineComponent({
+    name: 'FormularioView',
+    props: {
+        id: {
+            type: String
+        }
+    },
+    mounted() {
+        if(this.id) {
+            const projeto = this.store.state.projetos.find(proj => proj.id == this.id)
+            this.nomeDoProjeto = projeto?.nome || ''
+        }
+    },
+    data() {
+        return {
+            nomeDoProjeto: '',
+        }
+    },
+    methods: {
+        salvar() {
+            if (this.id) {
+                this.store.commit(ALTERA_PROJETO, { // Aqui
+                    id: this.id,
+                    nome: this.nomeDoProjeto
+                })
+            } else {
+                this.store.commit(ADICIONA_PROJETO, this.nomeDoProjeto) // Aqui
+                
+            }
+            this.nomeDoProjeto = '',
+            this.$router.push('/projetos')
+        },
+    },
+    setup() {
+        const store = useStore();
+        return {
+            store
+        }
+    }
+})
+</script>
+```
+
+- Note que aqui tu não precisa usar [], basta chamar as const.
+
+
+### SEM AS CONST
+Formulario.vue
+```vue
+<template>
+    <section>
+        <form @submit.prevent="salvar">
+            <div class="field">
+                <label for="nomeDoProjeto" class="label">
+                    Nome do Projeto
+                </label>
+                <input type="text" class="input" v-model="nomeDoProjeto" id="nomeDoProjeto" />
+            </div>
+            <div class="field">
+                <button class="button" type="submit">
+                    Salvar
+                </button>
+            </div>
+        </form>
+    </section>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { useStore } from '@/store';
+
+export default defineComponent({
+    name: 'FormularioView',
+    props: {
+        id: {
+            type: String
+        }
+    },
+    mounted() {
+        if(this.id) {
+            const projeto = this.store.state.projetos.find(proj => proj.id == this.id)
+            this.nomeDoProjeto = projeto?.nome || ''
+        }
+    },
+    data() {
+        return {
+            nomeDoProjeto: '',
+        }
+    },
+    methods: {
+        salvar() {
+            if (this.id) {
+                this.store.commit('ALTERA_PROJETO', {
+                    id: this.id,
+                    nome: this.nomeDoProjeto
+                })
+            } else {
+                this.store.commit('ADICIONA_PROJETO', this.nomeDoProjeto)
+                
+            }
+            this.nomeDoProjeto = '',
+            this.$router.push('/projetos')
+        },
+    },
+    setup() {
+        const store = useStore();
+        return {
+            store
+        }
+    }
+})
+</script>
+
+
+```
