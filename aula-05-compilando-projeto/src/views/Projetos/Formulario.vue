@@ -21,7 +21,7 @@ import { defineComponent } from 'vue';
 import { useStore } from '@/store';
 import { ADICIONA_PROJETO, ALTERA_PROJETO } from '@/store/tipo-mutations';
 import { TipoNotificacao } from '@/interfaces/INotificacao';
-import useNotificador from '@/hooks/notificador.ts'
+import useNotificador from '@/hooks/notificador'
 
 export default defineComponent({
     name: 'FormularioView',
